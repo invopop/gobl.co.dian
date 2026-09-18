@@ -376,7 +376,8 @@ var extensions = []*cbc.Definition{
 				Colombian electronic invoicing.
 
 				The DIAN limits suppliers to ~01~ (IVA) or ~04~ (INC), while customers may
-				use any value; final consumers must be reported with ~ZZ~.
+				use any value; final consumers must be reported with ~ZZ~. If a Colombian
+				customer provides no value, GOBL will automatically set ~ZZ~ as the default.
 
 				For example:
 

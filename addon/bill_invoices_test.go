@@ -279,6 +279,24 @@ func TestNormalizeInvoice(t *testing.T) {
 		assert.Equal(t, cbc.Code("R-99-PN"), inv.Customer.Ext.Get(dian.ExtKeyFiscalResponsibility))
 	})
 
+	t.Run("sets default tax scheme for Colombian customer only", func(t *testing.T) {
+		inv := baseInvoice()
+
+		norm.Normalize(inv, tax.AddonContext(dian.V2))
+
+		assert.Equal(t, cbc.Code("ZZ"), inv.Customer.Ext.Get(dian.ExtKeyTaxScheme))
+		assert.False(t, inv.Supplier.Ext.Has(dian.ExtKeyTaxScheme))
+	})
+
+	t.Run("keeps an explicit customer tax scheme", func(t *testing.T) {
+		inv := baseInvoice()
+		inv.Customer.Ext = inv.Customer.Ext.Set(dian.ExtKeyTaxScheme, "01")
+
+		norm.Normalize(inv, tax.AddonContext(dian.V2))
+
+		assert.Equal(t, cbc.Code("01"), inv.Customer.Ext.Get(dian.ExtKeyTaxScheme))
+	})
+
 	t.Run("keeps existing tax responsibility for supplier", func(t *testing.T) {
 		inv := baseInvoice()
 		// Set a specific tax responsibility
