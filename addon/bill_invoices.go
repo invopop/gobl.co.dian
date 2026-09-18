@@ -36,16 +36,21 @@ func normalizeInvoice(inv *bill.Invoice) {
 	if inv == nil {
 		return
 	}
-	normalizeInvoiceParty(inv.Supplier)
-	normalizeInvoiceParty(inv.Customer)
+	normalizeInvoiceParty(inv.Supplier, cbc.CodeMap{
+		ExtKeyFiscalResponsibility: "R-99-PN",
+	})
+	// Customers default to tributo ZZ; suppliers carry no assumable tributo.
+	normalizeInvoiceParty(inv.Customer, cbc.CodeMap{
+		ExtKeyFiscalResponsibility: "R-99-PN",
+		ExtKeyTaxScheme:            "ZZ",
+	})
 }
 
-func normalizeInvoiceParty(p *org.Party) {
+func normalizeInvoiceParty(p *org.Party, defaults cbc.CodeMap) {
 	if p == nil || !isColombian(p.TaxID) {
 		return
 	}
-	def := tax.ExtensionsOf(cbc.CodeMap{ExtKeyFiscalResponsibility: "R-99-PN"})
-	p.Ext = def.Merge(p.Ext)
+	p.Ext = tax.ExtensionsOf(defaults).Merge(p.Ext)
 }
 
 func billInvoiceRules() *rules.Set {
