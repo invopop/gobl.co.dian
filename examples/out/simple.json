@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "961ab135dce22637224c2f214aaed47a7504aa4c47d3b6f6166a52bdf3200cdc"
+			"val": "5368dab7b27fb9c6ce9e18f621ac865b54c0b7e236ab8aab84cd208d91acd65b"
 		}
 	},
 	"doc": {
@@ -64,7 +64,8 @@
 			],
 			"ext": {
 				"co-dian-fiscal-responsibility": "O-15",
-				"co-dian-municipality": "11001"
+				"co-dian-municipality": "11001",
+				"co-dian-tax-scheme": "ZZ"
 			}
 		},
 		"lines": [
