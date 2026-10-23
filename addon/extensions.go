@@ -14,6 +14,7 @@ const (
 	ExtKeyFiscalResponsibility cbc.Key = "co-dian-fiscal-responsibility"
 	ExtKeyItemIdentification   cbc.Key = "co-dian-item-identification"
 	ExtKeyTaxScheme            cbc.Key = "co-dian-tax-scheme"
+	ExtKeyInvoiceType          cbc.Key = "co-dian-invoice-type"
 )
 
 var extensions = []*cbc.Definition{
@@ -420,6 +421,77 @@ var extensions = []*cbc.Definition{
 				Name: i18n.String{
 					i18n.EN: "Not applicable",
 					i18n.ES: "No aplica",
+				},
+			},
+		},
+	},
+	{
+		Key: ExtKeyInvoiceType,
+		Name: i18n.String{
+			i18n.EN: "Document Type",
+			i18n.ES: "Tipo de Documento",
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "DIAN Document Type Codes for the InvoiceTypeCode element, see Anexo Tecnico version 1.8, section 13.1.3",
+				},
+				URL:         "https://www.dian.gov.co/impuestos/factura-electronica/Documents/Anexo-Tecnico-Resolucion-000012-09022021.pdf",
+				ContentType: "application/pdf",
+			},
+			{
+				Title: i18n.String{
+					i18n.EN: "DIAN step-by-step guide for contingency invoice numbering and transcription",
+				},
+				URL:         "https://www.dian.gov.co/impuestos/factura-electronica/Documents/Paso-a-paso-solicitud-de-numeracion-y-transcripcion-de-la-factura-de-contingencia.pdf",
+				ContentType: "application/pdf",
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				The type of sales invoice reported to the DIAN. Only applies to standard
+				invoices; when not set, the invoice is a regular electronic sales invoice.
+
+				Use ~03~ to transmit a paper invoice (factura de talonario o de papel) issued
+				while the supplier could not invoice electronically. The invoice's series and
+				code must come from a DIAN contingency numbering resolution, and the paper
+				invoice must be referenced in ~preceding~ with its series, code, and issue date.
+
+				For example:
+
+				~~~js
+				"series": "CONT",
+				"code": "1001",
+				"tax": {
+					"ext": { "co-dian-invoice-type": "03" }
+				},
+				"preceding": [
+					{
+						"series": "CONT",
+						"code": "1001",
+						"issue_date": "2026-10-22"
+					}
+				]
+				~~~
+			`),
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "01",
+				Name: i18n.String{
+					i18n.EN: "Electronic sales invoice",
+					i18n.ES: "Factura electrónica de Venta",
+				},
+			},
+			{
+				Code: "03",
+				Name: i18n.String{
+					i18n.EN: "Contingency transmission",
+					i18n.ES: "Instrumento electrónico de transmisión – tipo 03",
+				},
+				Desc: i18n.String{
+					i18n.EN: "Transcription of a paper invoice issued during a supplier contingency.",
+					i18n.ES: "Transcripción de la factura de talonario o papel.",
 				},
 			},
 		},

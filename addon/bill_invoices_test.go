@@ -495,3 +495,41 @@ func TestPaymentDueDateValidation(t *testing.T) {
 		assert.NotContains(t, err.Error(), "GOBL-CO-DIAN-BILL-INVOICE-18")
 	})
 }
+
+func TestContingencyInvoiceValidation(t *testing.T) {
+	contingency := func() *bill.Invoice {
+		inv := baseInvoice()
+		inv.Series = "CONT"
+		inv.Tax = &bill.Tax{Ext: tax.ExtensionsOf(cbc.CodeMap{dian.ExtKeyInvoiceType: "03"})}
+		inv.Preceding = []*org.DocumentRef{
+			{Series: "CONT", Code: "12345", IssueDate: cal.NewDate(2022, 12, 26)},
+		}
+		return inv
+	}
+
+	t.Run("allows a paper invoice reference", func(t *testing.T) {
+		inv := contingency()
+		require.NoError(t, inv.Calculate())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("requires a paper invoice reference", func(t *testing.T) {
+		inv := contingency()
+		inv.Preceding = nil
+		require.NoError(t, inv.Calculate())
+		assert.ErrorContains(t, rules.Validate(inv), "GOBL-CO-DIAN-BILL-INVOICE-19")
+	})
+
+	t.Run("requires the paper invoice issue date", func(t *testing.T) {
+		inv := contingency()
+		inv.Preceding[0].IssueDate = nil
+		require.NoError(t, inv.Calculate())
+		assert.ErrorContains(t, rules.Validate(inv), "GOBL-CO-DIAN-BILL-INVOICE-20")
+	})
+
+	t.Run("skips regular invoices", func(t *testing.T) {
+		inv := baseInvoice()
+		require.NoError(t, inv.Calculate())
+		assert.NoError(t, rules.Validate(inv))
+	})
+}
