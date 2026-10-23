@@ -206,25 +206,7 @@ func billInvoiceRules() *rules.Set {
 				is.Func("credit sale has due date", invoiceCreditSaleHasDueDate),
 			),
 		),
-		// Codes 19/20: DIAN rules FAI01/FAI05 require the paper invoice reference and its date on contingency invoices
-		rules.When(
-			is.Func("contingency invoice", invoiceIsContingency),
-			rules.Field("preceding",
-				rules.Assert("19", "preceding paper invoice is required for contingency invoices", is.Present),
-				rules.Each(
-					rules.Field("issue_date",
-						rules.Assert("20", "preceding issue date is required for contingency invoices", is.Present),
-					),
-				),
-			),
-		),
 	)
-}
-
-// invoiceIsContingency reports whether the invoice transmits a paper invoice (DIAN type 03).
-func invoiceIsContingency(val any) bool {
-	inv, ok := val.(*bill.Invoice)
-	return ok && inv != nil && inv.Tax.GetExt(ExtKeyInvoiceType) == "03"
 }
 
 func isColombian(tID *tax.Identity) bool {
