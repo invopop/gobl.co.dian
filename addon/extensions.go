@@ -454,24 +454,18 @@ var extensions = []*cbc.Definition{
 
 				Use ~03~ to transmit a paper invoice (factura de talonario o de papel) issued
 				while the supplier could not invoice electronically. The invoice's series and
-				code must come from a DIAN contingency numbering resolution, and the paper
-				invoice must be referenced in ~preceding~ with its series, code, and issue date.
+				code must be the paper invoice's number, from a DIAN contingency numbering
+				resolution, and the ~issue_date~ the date the paper invoice was issued.
 
 				For example:
 
 				~~~js
 				"series": "CONT",
 				"code": "1001",
+				"issue_date": "2026-10-22",
 				"tax": {
 					"ext": { "co-dian-invoice-type": "03" }
-				},
-				"preceding": [
-					{
-						"series": "CONT",
-						"code": "1001",
-						"issue_date": "2026-10-22"
-					}
-				]
+				}
 				~~~
 			`),
 		},

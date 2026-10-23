@@ -51,7 +51,7 @@ import (
 | `co-dian-item-identification` | Product-coding standard for line item codes. Optional. |
 | `co-dian-credit-code` | Correction concept, required on credit note `preceding` references. |
 | `co-dian-debit-code` | Correction concept, required on debit note `preceding` references. |
-| `co-dian-invoice-type` | Invoice document type (`InvoiceTypeCode`): `01` sales invoice, `03` contingency transmission of a paper invoice, referenced in `preceding`. Optional. |
+| `co-dian-invoice-type` | Invoice document type (`InvoiceTypeCode`): `01` sales invoice, `03` contingency transmission of a paper invoice. Optional. |
 
 Simplified (B2C) customers may be identified with DIAN document types via
 `org.Identity` keys (`co-citizen-id`, `co-passport`, …), and corrections via
